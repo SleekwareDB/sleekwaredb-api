@@ -1,0 +1,21 @@
+version: '3'
+services:
+    web:
+        image: nginx:latest
+        ports:
+            - "8888:80"
+        volumes:
+            - ./conf/nginx.conf:/etc/nginx/conf.d/nginx.conf
+            - ./:/var/www/html
+        depends_on:
+            - php
+        restart: always
+    php:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        volumes:
+            - ./:/var/www/html:sleekwaredb-user
+        restart: always
+volumes:
+   sleekwaredb-api: {}
