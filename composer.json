@@ -1,0 +1,25 @@
+{
+    "name": "gitpod/sleekwaredb-api",
+    "description": "SleekwareDB API",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "SleekwaredbApi\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Imam Ali Mustofa",
+            "email": "d.darkterminal@gmail.com"
+        }
+    ],
+    "require": {
+        "slim/slim": "4.*",
+        "slim/psr7": "^1.5",
+        "php-di/php-di": "^6.4",
+        "justinrainbow/json-schema": "^5.2"
+    },
+    "require-dev": {
+        "symfony/dotenv": "^6.1"
+    }
+}
