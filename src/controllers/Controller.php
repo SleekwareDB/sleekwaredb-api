@@ -1,10 +1,12 @@
 <?php
 namespace SleekwaredbApi\controllers;
 
-class Controller
+use SleekwaredbApi\core\Connector;
+
+class Controller extends Connector
 {
     protected $container;
-    
+
     public function __construct($container)
     {
         $this->container = $container;
