@@ -1,20 +1,20 @@
 <?php
 
-use Symfony\Component\Dotenv\Dotenv;
 use DI\Container;
-use DI\ContainerBuilder;
-use Psr\Http\Message\ServerRequestInterface as Request;
-use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Factory\AppFactory;
+use Symfony\Component\Dotenv\Dotenv;
 
 require_once __DIR__ . '/vendor/autoload.php';
+
+$loaders = require_once __DIR__ . '/src/injectors/loader.php';
 
 $dotenv = new Dotenv();
 $dotenv->load('.env');
 
-$containerBuilder = new ContainerBuilder();
-$containerBuilder->addDefinitions(__DIR__ . '/src/config/loader.php');
-$container = $containerBuilder->build();
+$container = new Container();
+$container->set('config', $loaders['config']);
+
+require_once __DIR__ . '/src/injectors/app.container.php';
 
 AppFactory::setContainer($container);
 $app = AppFactory::create();
@@ -22,7 +22,7 @@ $app = AppFactory::create();
 $app->addRoutingMiddleware();
 $app->addBodyParsingMiddleware();
 
-$errorSettings = $container->get('Config')->getErrorSettings();
+$errorSettings = $container->get('config');
 $errorMiddleware = $app->addErrorMiddleware(
     $errorSettings['displayErrorDetails'], 
     $errorSettings['logErrors'], 
