@@ -1,4 +1,4 @@
-FROM php:fpm
+FROM php:8.1.18-fpm-bullseye
 
 WORKDIR /var/www/html
 
@@ -15,7 +15,7 @@ RUN apt-get install -y --no-install-recommends \
         libwebp-dev \
         libzip-dev
 
-RUN docker-php-ext-install -j "$(nproc)" \ 
+RUN docker-php-ext-install -j "$(nproc)" \
         pdo \
         pdo_mysql \
         mysqli \
@@ -26,20 +26,20 @@ RUN docker-php-ext-install -j "$(nproc)" \
         zip
 
 RUN docker-php-ext-configure gd \
-		--with-freetype \
-		--with-jpeg \
-		--with-webp
+        --with-freetype \
+        --with-jpeg \
+        --with-webp
 
-    
+
 RUN set -eux; \
-	docker-php-ext-enable opcache; \
-	{ \
-		echo 'opcache.memory_consumption=128'; \
-		echo 'opcache.interned_strings_buffer=8'; \
-		echo 'opcache.max_accelerated_files=4000'; \
-		echo 'opcache.revalidate_freq=2'; \
-		echo 'opcache.fast_shutdown=1'; \
-	} > /usr/local/etc/php/conf.d/opcache-recommended.ini
+        docker-php-ext-enable opcache; \
+        { \
+        echo 'opcache.memory_consumption=128'; \
+        echo 'opcache.interned_strings_buffer=8'; \
+        echo 'opcache.max_accelerated_files=4000'; \
+        echo 'opcache.revalidate_freq=2'; \
+        echo 'opcache.fast_shutdown=1'; \
+        } > /usr/local/etc/php/conf.d/opcache-recommended.ini
 
 RUN pecl install xdebug && docker-php-ext-enable xdebug
 

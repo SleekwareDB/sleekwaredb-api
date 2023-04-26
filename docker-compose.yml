@@ -1,6 +1,7 @@
 version: '3'
 services:
     web:
+        container_name: swdb-server
         image: nginx:latest
         ports:
             - "8888:80"
@@ -11,6 +12,7 @@ services:
             - php
         restart: always
     php:
+        container_name: swdb-php
         build:
             context: .
         volumes:
@@ -18,4 +20,4 @@ services:
             - ./:/var/www/html:rw
         restart: always
 volumes:
-   sleekwaredb-api: {}
+    sleekwaredb-api: {}
