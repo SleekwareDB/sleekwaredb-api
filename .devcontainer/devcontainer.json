@@ -1,7 +1,1 @@
-{
-    "name": "SleekwareDB API Devcontainer",
-     "build": {
-        "dockerfile": "Dockerfile",
-        "args": { "VARIANT": "ubuntu-22.04" }
-    },
-}
+{"image": "mcr.microsoft.com/devcontainers/php:8.1"}
