@@ -5,7 +5,11 @@
     "autoload": {
         "psr-4": {
             "SleekwaredbApi\\": "src/"
-        }
+        },
+        "files": [
+            "src/core/Helpers.php",
+            "src/core/Constans.php"
+        ]
     },
     "authors": [
         {
