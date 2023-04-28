@@ -1,0 +1,9 @@
+GET http://localhost:8888/db/tables HTTP/1.1
+
+###
+POST http://localhost:8888/db/create HTTP/1.1
+Content-Type: application/json
+
+{
+    "name" : "pingboard"
+}

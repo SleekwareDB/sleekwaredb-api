@@ -1,17 +1,19 @@
 <?php
 namespace SleekwaredbApi\core;
 
+use Exception;
 use SleekDB\Query;
 use SleekDB\Store;
+use SleekwaredbApi\core\helpers\DatabaseHelper;
 
 class Db
 {
-    protected $databaseDirectory;
+    protected $databaseStore;
     protected $configuration;
 
-    public function __construct()
+    public function __construct($databaseName = null)
     {
-        $this->databaseDirectory = __DIR__ . "/db";
+        $this->databaseStore = $databaseName === null ? CORE_SYSTEM_STORE_DATABASES : APP_DATABASE_STORE;
         $this->configuration = [
             "auto_cache" => true,
             "cache_lifetime" => null,
@@ -31,15 +33,30 @@ class Db
     {
         $store = new Store(
             $name,
-            $this->databaseDirectory,
+            $this->databaseStore,
             $this->configuration
         );
         return $store;
     }
 
-    public function listAllStores()
+    public function createSystemStores()
     {
-        return listFolders($this->databaseDirectory, ['.gitignore','index.html']);
+        $success = false;
+        try {
+            for ($i=0; $i < count(CORE_DOCUMENT_STORES); $i++) { 
+                $this->store(CORE_DOCUMENT_STORES[$i]);
+            }
+            $success = true;
+            return $success;
+        } catch (Exception $e) {
+            echo $e->getMessage();
+            return $success;
+        }
+    }
+
+    public function listAllSystemStores()
+    {
+        return DatabaseHelper::listFolders($this->databaseStore, ['.gitignore','index.html']);
     }
 }
 

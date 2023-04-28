@@ -1,22 +1,41 @@
 <?php
 
-use SleekwaredbApi\core\Db;
+/**
+ * Recursive Directory Size Scanner
+ *
+ * @param string $directory
+ * @return integer
+ */
+function recursiveDirectorySize(string $directory) : int {
+    $total_size = 0;
+    $files = scandir($directory);
 
-function listFolders($dir, $defaultExcludes = [])
-{
-    $exludes = array_merge($defaultExcludes, DEFAULT_DIRECTORY_EXCLUDES);
-    $folders = array();
-    $contents = scandir($dir);
-    foreach ($contents as $content) {
-        if (is_dir($dir . '/' . $content) && !in_array($content, $exludes)) {
-            $db = new Db();
-            $docCount = $db->store($content)->count();
-            array_push($folders, [
-                'name' => $content,
-                'totalRows' => $docCount
-            ]);
+    foreach ($files as $file) {
+        if (!in_array($file, DEFAULT_DIRECTORY_EXCLUDES)) {
+            $path = $directory . DIRECTORY_SEPARATOR . $file;
+            if (is_dir($path)) {
+                $total_size += recursiveDirectorySize($path);
+            } else {
+                $total_size += filesize($path);
+            }
         }
     }
-    $stores['stores'] = $folders;
-    return $stores;
+
+    return $total_size;
+}
+
+/**
+ * Create Directory
+ *
+ * @param string $dirPath
+ * @return boolean
+ */
+function createDirectory(string $dirPath) : bool {
+    if (!is_dir($dirPath)) {
+        $result = mkdir($dirPath, 0777, true);
+        if (!$result) {
+            return false;
+        }
+    }
+    return true;
 }
