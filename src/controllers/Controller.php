@@ -1,12 +1,15 @@
 <?php
 namespace SleekwaredbApi\controllers;
 
-class Controller
+use SleekwaredbApi\core\Db;
+
+class Controller extends Db
 {
     protected $container;
-    
+
     public function __construct($container)
     {
+        parent::__construct();
         $this->container = $container;
     }
 

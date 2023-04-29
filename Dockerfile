@@ -1,21 +1,23 @@
-FROM php:fpm
+FROM php:8.1.18-fpm-bullseye
 
 WORKDIR /var/www/html
 
-COPY . /var/www/html
-
-RUN apt-get update
-
-RUN apt-get install -y --no-install-recommends \
+# Install required packages
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
         libfreetype6-dev \
         libicu-dev \
         libjpeg-dev \
         libmagickwand-dev \
         libpng-dev \
         libwebp-dev \
-        libzip-dev
+        libzip-dev \
+        curl \
+        git \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN docker-php-ext-install -j "$(nproc)" \ 
+# Install PHP extensions
+RUN docker-php-ext-install -j "$(nproc)" \
         pdo \
         pdo_mysql \
         mysqli \
@@ -23,29 +25,29 @@ RUN docker-php-ext-install -j "$(nproc)" \
         exif \
         gd \
         intl \
-        zip
+        zip \
+    && docker-php-ext-configure gd \
+        --with-freetype \
+        --with-jpeg \
+        --with-webp \
+    && set -eux; \
+        docker-php-ext-enable opcache; \
+        { \
+        echo 'opcache.memory_consumption=128'; \
+        echo 'opcache.interned_strings_buffer=8'; \
+        echo 'opcache.max_accelerated_files=4000'; \
+        echo 'opcache.revalidate_freq=2'; \
+        echo 'opcache.fast_shutdown=1'; \
+        } > /usr/local/etc/php/conf.d/opcache-recommended.ini \
+    && pecl install xdebug && docker-php-ext-enable xdebug \
+    && pecl install imagick && docker-php-ext-enable imagick
 
-RUN docker-php-ext-configure gd \
-		--with-freetype \
-		--with-jpeg \
-		--with-webp
+# Install Composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-    
-RUN set -eux; \
-	docker-php-ext-enable opcache; \
-	{ \
-		echo 'opcache.memory_consumption=128'; \
-		echo 'opcache.interned_strings_buffer=8'; \
-		echo 'opcache.max_accelerated_files=4000'; \
-		echo 'opcache.revalidate_freq=2'; \
-		echo 'opcache.fast_shutdown=1'; \
-	} > /usr/local/etc/php/conf.d/opcache-recommended.ini
+# Healthcheck
+HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
+    CMD curl --fail http://localhost:9000/fpm-ping || exit 1
 
-RUN pecl install xdebug && docker-php-ext-enable xdebug
-
-RUN pecl install imagick-3.7.0 && docker-php-ext-enable imagick
-
-RUN adduser sleekwaredb-user
-USER sleekwaredb-user
-
+# Start PHP-FPM
 CMD ["php-fpm"]
