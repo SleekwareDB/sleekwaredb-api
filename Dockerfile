@@ -45,13 +45,6 @@ RUN docker-php-ext-install -j "$(nproc)" \
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Create user and set permissions
-RUN adduser sleekwaredb-user \
-    && chown -R sleekwaredb-user:sleekwaredb-user /var/www/html \
-    && chmod -R 755 /var/www/html
-
-USER sleekwaredb-user
-
 # Healthcheck
 HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
     CMD curl --fail http://localhost:9000/fpm-ping || exit 1
