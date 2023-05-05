@@ -17,8 +17,8 @@ SleekwareDB API is a backend for SleekwareDB. SleekwareDB is Web Interface for [
     - **Security Rules**: Provides a set of security rules that allow user to control access to their database collections. User can define rules that restrict read, write, or delete operations based on the user's authentication status, IP address, or other criteria.
     - **Realtime Database**: Also supports real-time updates using WebSockets. USer can subscribe to changes in their database collections and receive real-time notifications whenever a document is added, updated, or deleted.
 - Storage
-    - **File Storage**: Provide storage feature allows user to securely store and manage files of any size, type, and quantity. You can use the Appwrite API to upload, download, and delete files.
-    - **File Management**: Provides an interface to manage user files and folders. User can create, delete, and move files and folders using the API or the Appwrite dashboard.
+    - **File Storage**: Provide storage feature allows user  to securely store and manage files of any size, type, and quantity. User  can use the our API to upload, download, and delete files.
+    - **File Management**: Provides an interface to manage  user files and folders. User can create, delete, and move files and  folders using the API or from our dashboard.
     - **Security**: Storage feature provides secure file storage with access control, encryption, and firewall protection. You can set up rules to define which users can access certain files, and which actions they can perform on them.
     - **Webhooks**: Storage feature supports webhooks that allow user to monitor file events and perform actions when specific events occur. For example, user can trigger an action when a new file is uploaded or when a file is deleted.
 
